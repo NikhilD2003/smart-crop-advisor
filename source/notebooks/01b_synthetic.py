@@ -7,7 +7,8 @@
 # Rows (100 per crop, 2,200 total, same size as the real data):
 # * 40 `real_good`      - real rows of the crop (the strong conditions)
 # * 21 `other_crop`     - the conditions of each of the 21 other crops, so every crop x crop pair is covered once
-# * 30 `blend`          - the crop's own real row mixed 20-70% with another crop's conditions (marginal fields)
+# * 20 `blend`          - the crop's own real row mixed 20-70% with another crop's conditions (marginal fields)
+# * 10 `single_extreme` - a real row of the crop where ONE reading is pushed to the dataset minimum or maximum (drought, frost, acid soil...)
 # * 9  `one_reading_off`- a real row of the crop where 1-2 readings are replaced by another crop's values
 #
 # `suitability` (0-1) is NOT random. It comes from one formula: how far the readings are from the crop's usual profile
@@ -64,9 +65,12 @@ for c in crops:
     for o in crops:
         if o != c:
             add(c, pick(o), "other_crop", o)  # every crop x other-crop pair appears exactly once
-    for _ in range(30):
+    for _ in range(20):
         o = rng.choice([k for k in crops if k != c]); a = rng.uniform(0.2, 0.7)
         add(c, (1 - a) * pick(c) + a * pick(o), "blend", o)
+    for _ in range(10):  # one reading ruined, everything else typical: the field must still score low
+        x = pick(c); j = rng.integers(7); x[j] = lo.values[j] if rng.random() < 0.5 else hi.values[j]
+        add(c, x, "single_extreme")
     for _ in range(9):
         o = rng.choice([k for k in crops if k != c]); x = pick(c); donor = pick(o)
         for j in rng.choice(7, size=rng.integers(1, 3), replace=False):
@@ -94,3 +98,22 @@ print("real good fields scoring 0.70+:", f"{(syn[syn.how_generated == 'real_good
 import json  # crop profile (median, spread) is shared with training and the browser
 (PROC / "crop_profile.json").write_text(json.dumps(
     {c: {"med": med.loc[c].round(4).tolist(), "scale": scale.loc[c].round(4).tolist()} for c in crops}))
+
+# %% [markdown]
+# ## Graph: how the synthetic scores are distributed
+# One histogram per row type. Real good fields sit near 1; other crops' conditions pile up near 0; blends and
+# one-reading-off rows spread in between. The dotted lines are the 30% and 70% tier boundaries.
+
+# %%
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(1, 2, figsize=(12, 4))
+for k, g in syn.groupby("how_generated"):
+    ax[0].hist(g.suitability, bins=25, alpha=0.55, label=f"{k} ({len(g)})")
+ax[0].axvline(0.3, color="grey", ls=":"); ax[0].axvline(0.7, color="grey", ls=":")
+ax[0].set_xlabel("suitability (0-1)"); ax[0].set_ylabel("rows"); ax[0].legend(fontsize=7); ax[0].set_title("Score by how the row was generated")
+syn.tier.value_counts().reindex(["unsuitable", "marginal", "suitable"]).plot.bar(ax=ax[1], color=["#b5483a", "#d9a441", "#3d8f4f"])
+ax[1].set_title("Rows per tier (<30% / 30-70% / >=70%)"); ax[1].tick_params(axis="x", rotation=0)
+plt.tight_layout(); plt.savefig(ROOT / "source" / "models" / "figures" / "synthetic_scores.png", dpi=120); plt.show()

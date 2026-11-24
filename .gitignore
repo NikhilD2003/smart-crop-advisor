@@ -4,3 +4,4 @@ node_modules/
 .vercel/
 .ipynb_checkpoints/
 *.pyc
+data/external/

@@ -14,17 +14,17 @@
   "tree_depth_chosen": 11,
   "decision_tree": {
     "accuracy": 0.9773,
-    "train_seconds": 0.009,
+    "train_seconds": 0.013,
     "train_accuracy": 0.9898,
     "file_kb": 15.7,
-    "predict_ms": 0.071
+    "predict_ms": 0.06
   },
   "random_forest": {
     "accuracy": 0.9909,
-    "train_seconds": 0.063,
+    "train_seconds": 0.09,
     "train_accuracy": 0.9966,
     "file_kb": 773.1,
-    "predict_ms": 1.213
+    "predict_ms": 1.048
   },
   "rf_per_crop": {
     "apple": {
@@ -184,11 +184,11 @@
   },
   "neural_net": {
     "accuracy": 0.9909,
-    "train_seconds": 2.019,
+    "train_seconds": 1.968,
     "train_accuracy": 0.9983,
     "epochs": 408,
     "file_kb": 121.1,
-    "predict_ms": 0.164
+    "predict_ms": 0.134
   },
   "shap_mean_abs": {
     "N": 0.0221,
@@ -432,12 +432,12 @@
     "0.3": 0.825
   },
   "suitability": {
-    "MAE": 0.0506,
-    "R2": 0.9438,
+    "MAE": 0.0464,
+    "R2": 0.9488,
     "rows": 2200,
-    "tier_accuracy": 0.9091,
-    "unsuitable_predicted_under_30pct": 0.8581,
-    "argmax_matches_real_label": 0.975
+    "tier_accuracy": 0.9182,
+    "unsuitable_predicted_under_30pct": 0.9195,
+    "argmax_matches_real_label": 0.9727
   },
-  "web_model_kb": 194.5
+  "web_model_kb": 182.1
 }

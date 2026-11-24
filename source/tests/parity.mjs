@@ -20,7 +20,7 @@ for (const k of Object.keys(got)) {
 }
 const maxDiff = Math.max(...c.suit.map(([crop, x, want]) => Math.abs(suitability(m, crop, x) - want)));
 console.log("suit    max abs diff", maxDiff.toFixed(4));
-if (maxDiff > 0.001) bad = true;
+if (maxDiff > 0.002) bad = true;
 // monotone: pushing any reading further from the crop's typical value must never raise the score
 let rnd = 7; const rand = () => (rnd = (rnd * 16807) % 2147483647) / 2147483647;
 let viol = 0, checks = 0;

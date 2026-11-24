@@ -2,6 +2,11 @@
 # # 01 - Data preparation and analysis
 # Cleans both datasets, runs descriptive / exploratory / inferential analysis.
 # Run from anywhere: `python source/notebooks/01_prepare.py` (also opens as cells in PyCharm/VS Code).
+#
+# **What this part does:** loads the two raw datasets, removes bad rows, describes the data, draws exploratory graphs and runs
+# the inferential tests the brief asks for. **Why:** a model is only as good as its data, and the brief requires descriptive,
+# exploratory and inferential analysis before any modelling. **Outputs:** `data/processed/*_clean.csv`,
+# `source/models/eda.json` and the graphs in `source/models/figures/`.
 
 # %%
 import json
@@ -23,6 +28,10 @@ report = {}
 
 # %% [markdown]
 # ## Crop recommendation data: check missing, duplicates, impossible values
+# **What:** count missing values, duplicate rows, pH outside 0-14, humidity outside 0-100 and negative readings, then drop any
+# offending rows. **Why:** impossible values would silently corrupt every later step (this is also the first AI-security
+# defence: reject out-of-range data). **Result:** 2,200 rows, 0 missing, 0 duplicates, 0 impossible values, so nothing is dropped.
+# The same range rules are reused by the web app to reject spoofed sensor readings.
 
 # %%
 crop = pd.read_csv(RAW / "crop_recommendation.csv")
@@ -42,6 +51,11 @@ report["crop_clean_rows"] = len(crop)
 
 # %% [markdown]
 # ## Descriptive + exploratory
+# **What:** summary statistics (count, mean, std, min, quartiles, max) for the 7 readings, samples per crop (100 each, so the
+# classes are balanced), mean reading per crop, a correlation heatmap, histograms and a rainfall-by-crop box plot.
+# **Why:** to see the ranges, spot outliers, and learn which readings separate crops. **Graphs:** `correlation.png`
+# (Pearson r between readings; P and K are strongly correlated because several fruit crops need both), `histograms.png`
+# (shape of each reading) and `rainfall_by_crop.png` (rice, jute and coconut are wet, chickpea and mothbeans are dry).
 
 # %%
 report["describe"] = crop[FEATURES].describe().round(3).to_dict()
@@ -60,6 +74,11 @@ plt.xticks(rotation=70); plt.tight_layout(); plt.savefig(FIG / "rainfall_by_crop
 
 # %% [markdown]
 # ## Inferential: does rainfall differ between rice and chickpea? (Welch t-test + 95% CI) and across all crops (ANOVA)
+# **What:** a Welch t-test (does not assume equal variances) compares rice and chickpea rainfall, with a 95% confidence
+# interval for the difference; a one-way ANOVA tests whether mean rainfall differs across all 22 crops.
+# **Why:** the brief asks for inferential analysis. **Result:** rice averages 236 mm vs chickpea 80 mm, t = 44.35,
+# p = 7.6e-72, 95% CI of the difference [149.15, 163.10] mm; ANOVA F = 605.5, p ~ 0. So crops genuinely differ in rainfall.
+# (`03_analysis.py` adds effect sizes, which a p-value cannot give.)
 
 # %%
 rice, chick = (crop.loc[crop.label == c, "rainfall"] for c in ("rice", "chickpea"))
@@ -75,6 +94,9 @@ report["anova_rainfall_across_crops"] = {"F": round(anova.statistic, 1), "p": fl
 
 # %% [markdown]
 # ## Yield data
+# **What:** loads the FAO-derived country yield table (28,242 rows), drops the leftover index column, 2,310 duplicates and
+# rows with non-positive yield or negative inputs, leaving 25,932 rows. **Why:** the yield regression (Module 2) needs clean,
+# physically sensible rows. **Output:** `yield_clean.csv` and `yield_correlation.png` (correlation of yield with rainfall -0.00, pesticides 0.07, temperature -0.11, year 0.09: all near zero, so crop type, not weather, explains most of the yield variance).
 
 # %%
 y = pd.read_csv(RAW / "yield_df.csv")

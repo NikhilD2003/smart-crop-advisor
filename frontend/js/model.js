@@ -44,17 +44,6 @@ export function zone(m, x) {
   return zones[argmax(d.map((v) => -v))];
 }
 
-// Explainable AI: how much does the winning crop's probability drop when one reading is replaced by the dataset average?
-export function explain(m, x, classIdx) {
-  const base = forestProba(m, x)[classIdx];
-  return m.features
-    .map((f, i) => {
-      const y = x.slice(); y[i] = m.kmeans.mean[i];
-      return { feature: f, drop: base - forestProba(m, y)[classIdx] };
-    })
-    .sort((a, b) => b.drop - a.drop);
-}
-
 export function predictYield(m, item, rain, pesticides, temp) {
   const y = m.yield, i = y.items.indexOf(item);
   const hg = y.intercept + y.item_coef[i] + y.num_coef[0] * rain + y.num_coef[1] * pesticides + y.num_coef[2] * temp;

@@ -2,6 +2,11 @@
 # # 02 - Train, compare, explain, export
 # Modules 1-4, 6-8. Needs `01_prepare.py` to have run. Writes metrics + figures to source/models
 # and the browser model to frontend/data/model.json.
+#
+# **What this part does:** trains and compares the classifiers (Modules 1, 3), explains them (Module 6), clusters farms
+# (Module 4), fits the yield regression (Module 2), measures Edge-AI size/speed (Module 7), runs the label-poisoning demo
+# (Module 8), trains the suitability model, and exports everything for the web app. **Why:** these are the course's ML
+# topics; each is evaluated on data the model never saw. **Outputs:** `metrics.json`, `.joblib` models, figures, `model.json`.
 
 # %%
 import json
@@ -40,6 +45,11 @@ M = {}  # all metrics land here
 
 # %% [markdown]
 # ## Module 1 - decision tree (depth chosen by cross-validation) vs random forest
+# **What:** 80/20 stratified split (every crop in both sets, fixed seed 42). Tree depth 3-12 is compared by 5-fold CV on the
+# training set only; the best depth (11) is kept so the tree is not just memorising (overfitting control). A 30-tree random
+# forest is trained for comparison. **Result:** tree 97.7%, forest 99.1% test accuracy. **Graphs:** `confusion_rf.png`
+# (rows = true crop, columns = predicted; a bright diagonal means correct), `tree_top.png` (first 3 levels of the tree = readable
+# rules), `feature_importance.png` (how much each reading reduces impurity across the forest; rainfall and humidity lead).
 
 # %%
 crop = pd.read_csv(PROC / "crop_clean.csv")
@@ -76,6 +86,9 @@ M["feature_importance"] = imp.round(4).to_dict()
 
 # %% [markdown]
 # ## Module 3 - neural network (scaler fit on the training set only)
+# **What:** a feed-forward network, 7 inputs -> 64 -> 32 hidden units (ReLU) -> 22 softmax outputs. Inputs are standardised
+# with a scaler fitted on the training set only (fitting on all data would leak test information). **Result:** 99.1% accuracy,
+# 408 epochs, about 2 s training. **Graph:** `mlp_loss.png`, the training loss per epoch; a smooth fall to near zero means it converged.
 
 # %%
 scaler = StandardScaler().fit(Xtr)
@@ -88,7 +101,10 @@ plt.plot(mlp.loss_curve_); plt.xlabel("epoch"); plt.ylabel("training loss"); plt
 plt.tight_layout(); plt.savefig(FIG / "mlp_loss.png", dpi=110); plt.close()
 
 # %% [markdown]
-# ## Module 6 - SHAP on the random forest (offline; the web demo uses an occlusion explanation instead)
+# ## Module 6 - SHAP on the random forest (offline; the web demo explains with per-reading score cost instead)
+# **What:** SHAP assigns each reading a share of credit for each prediction (Shapley values from game theory); the mean of the
+# absolute values over 200 test fields ranks the readings. **Why:** explainable AI. **Graph:** `shap_importance.png`
+# (humidity, K and P matter most, pH least, which agrees with the ANOVA effect sizes in part 03; the forest's own importance ranks rainfall first, so different explainers weigh correlated readings differently).
 
 # %%
 try:
@@ -104,6 +120,11 @@ except Exception as e:  # shap is optional
 
 # %% [markdown]
 # ## Module 4 - K-means zones (labels not used for fitting)
+# **What:** standardise the 7 readings, run K-means for k = 2..10, and choose k by the silhouette score (restricted to k >= 4
+# because k = 2 or 3 gives zones too coarse to describe in words). Each zone is described by its centre (readings more than
+# 0.5 standard deviations from average become words such as "hot, humid, high rainfall"). **Result:** k = 10, silhouette
+# 0.349, homogeneity vs the true crops 0.64. **Graphs:** `kmeans_k.png` (elbow = inertia, silhouette per k) and
+# `kmeans_pca.png` (the zones drawn in 2-D after PCA).
 
 # %%
 Xs_all = StandardScaler().fit(X)
@@ -139,6 +160,10 @@ M["kmeans"] = {"k": k_best, "silhouette_by_k": {str(k): round(s, 4) for k, s in 
 
 # %% [markdown]
 # ## Module 2 - yield regression (linear + ridge, one-hot crop type); random forest only as a reference
+# **What:** predict yield (hg/ha) from crop type (one-hot encoded), annual rainfall, pesticides and average temperature, with
+# linear and Ridge regression; a random forest is a reference, not shipped. **Metrics:** MAE (average error), RMSE (penalises big
+# errors) and R2 (share of variance explained). **Result:** linear R2 0.638, MAE 32,040 hg/ha (= 3.2 t/ha), RMSE 51,004;
+# Ridge is identical; the forest reaches R2 0.967 but is too large for the browser and shows the data has non-linear structure.
 
 # %%
 yd = pd.read_csv(PROC / "yield_clean.csv")
@@ -161,6 +186,11 @@ coef = lin[-1].coef_.tolist()
 
 # %% [markdown]
 # ## Module 7 - Edge AI numbers; Module 8 - label-poisoning demo
+# **Edge AI (Module 7):** each model is saved with joblib and timed: tree 15.7 KB / 0.07 ms per prediction, forest 773 KB / 1.2 ms,
+# network 121 KB / 0.16 ms. Small and fast means it can run on a low-cost device with no internet.
+# **Label poisoning (Module 8):** a share of training labels (0-30%) is replaced with random wrong crops and the tree is retrained.
+# **Result:** tree accuracy falls 97.7% -> 95.5% -> 92.5% -> 81.1% at 0, 5, 10, 20% poisoned (82.5% at 30%, a noisy tail),
+# showing why training data must come from trusted sources.
 
 # %%
 def predict_ms(fn, n=200):
@@ -253,8 +283,8 @@ model = {
               "median_pesticides": float(yd.pesticides_tonnes.median()),
               "for_crop": yield_for_crop, "metrics": M["yield"]["linear"]},
     "suit": {"profile": profile, "base": float(sreg._baseline_prediction.ravel()[0]), "metrics": M["suitability"],
-             "trees": [{"f": n["feature_idx"].tolist(), "t": [round(float(v), 4) for v in n["num_threshold"]],
-                        "l": n["left"].tolist(), "r": n["right"].tolist(), "v": [round(float(v), 5) for v in n["value"]],
+             "trees": [{"f": n["feature_idx"].tolist(), "t": [round(float(v), 6) for v in n["num_threshold"]],
+                        "l": n["left"].tolist(), "r": n["right"].tolist(), "v": [round(float(v), 7) for v in n["value"]],
                         "leaf": n["is_leaf"].astype(int).tolist()} for n in (p[0].nodes for p in sreg._predictors)]},
     "metrics": {k: M[k] for k in ("decision_tree", "random_forest", "neural_net")},
 }
