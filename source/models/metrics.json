@@ -1,0 +1,443 @@
+{
+  "tree_depth_cv": {
+    "3": 0.2273,
+    "4": 0.3182,
+    "5": 0.4091,
+    "6": 0.5659,
+    "7": 0.7438,
+    "8": 0.8767,
+    "9": 0.9523,
+    "10": 0.9767,
+    "11": 0.9835,
+    "12": 0.9835
+  },
+  "tree_depth_chosen": 11,
+  "decision_tree": {
+    "accuracy": 0.9773,
+    "train_seconds": 0.009,
+    "train_accuracy": 0.9898,
+    "file_kb": 15.7,
+    "predict_ms": 0.071
+  },
+  "random_forest": {
+    "accuracy": 0.9909,
+    "train_seconds": 0.063,
+    "train_accuracy": 0.9966,
+    "file_kb": 773.1,
+    "predict_ms": 1.213
+  },
+  "rf_per_crop": {
+    "apple": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "banana": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "blackgram": {
+      "precision": 1.0,
+      "recall": 0.95,
+      "f1-score": 0.9743589743589743,
+      "support": 20.0
+    },
+    "chickpea": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "coconut": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "coffee": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "cotton": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "grapes": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "jute": {
+      "precision": 0.9523809523809523,
+      "recall": 1.0,
+      "f1-score": 0.975609756097561,
+      "support": 20.0
+    },
+    "kidneybeans": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "lentil": {
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1-score": 0.9473684210526315,
+      "support": 20.0
+    },
+    "maize": {
+      "precision": 0.9523809523809523,
+      "recall": 1.0,
+      "f1-score": 0.975609756097561,
+      "support": 20.0
+    },
+    "mango": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "mothbeans": {
+      "precision": 0.9090909090909091,
+      "recall": 1.0,
+      "f1-score": 0.9523809523809523,
+      "support": 20.0
+    },
+    "mungbean": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "muskmelon": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "orange": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "papaya": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "pigeonpeas": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "pomegranate": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "rice": {
+      "precision": 1.0,
+      "recall": 0.95,
+      "f1-score": 0.9743589743589743,
+      "support": 20.0
+    },
+    "watermelon": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 20.0
+    },
+    "accuracy": 0.990909090909091,
+    "macro avg": {
+      "precision": 0.991538764266037,
+      "recall": 0.990909090909091,
+      "f1-score": 0.9908948561066662,
+      "support": 440.0
+    },
+    "weighted avg": {
+      "precision": 0.991538764266037,
+      "recall": 0.990909090909091,
+      "f1-score": 0.9908948561066662,
+      "support": 440.0
+    }
+  },
+  "feature_importance": {
+    "ph": 0.0468,
+    "temperature": 0.0814,
+    "N": 0.1008,
+    "P": 0.1594,
+    "K": 0.1921,
+    "humidity": 0.2083,
+    "rainfall": 0.2112
+  },
+  "neural_net": {
+    "accuracy": 0.9909,
+    "train_seconds": 2.019,
+    "train_accuracy": 0.9983,
+    "epochs": 408,
+    "file_kb": 121.1,
+    "predict_ms": 0.164
+  },
+  "shap_mean_abs": {
+    "N": 0.0221,
+    "P": 0.0266,
+    "K": 0.0303,
+    "temperature": 0.0105,
+    "humidity": 0.0323,
+    "ph": 0.0044,
+    "rainfall": 0.0236
+  },
+  "kmeans": {
+    "k": 10,
+    "silhouette_by_k": {
+      "2": 0.4168,
+      "3": 0.2519,
+      "4": 0.2553,
+      "5": 0.2925,
+      "6": 0.3044,
+      "7": 0.3333,
+      "8": 0.3266,
+      "9": 0.3321,
+      "10": 0.3488
+    },
+    "homogeneity_vs_crop": 0.6404,
+    "zones": [
+      {
+        "id": 0,
+        "size": 79,
+        "center": [
+          -0.1761,
+          -0.0985,
+          -0.1697,
+          2.2029,
+          0.8612,
+          0.4662,
+          0.7395
+        ],
+        "description": "hot, humid, high rainfall",
+        "top_crops": [
+          "papaya",
+          "orange",
+          "pigeonpeas"
+        ]
+      },
+      {
+        "id": 1,
+        "size": 335,
+        "center": [
+          1.2971,
+          0.1001,
+          -0.3494,
+          -0.1739,
+          0.1173,
+          -0.0691,
+          -0.1906
+        ],
+        "description": "high nitrogen",
+        "top_crops": [
+          "banana",
+          "cotton",
+          "maize",
+          "coffee"
+        ]
+      },
+      {
+        "id": 2,
+        "size": 200,
+        "center": [
+          -0.7738,
+          2.4262,
+          2.9988,
+          -0.4693,
+          0.7019,
+          -0.6354,
+          -0.2244
+        ],
+        "description": "low nitrogen, high phosphorus, high potassium, humid, acidic soil",
+        "top_crops": [
+          "grapes",
+          "apple"
+        ]
+      },
+      {
+        "id": 3,
+        "size": 283,
+        "center": [
+          -0.8293,
+          -1.0833,
+          -0.3914,
+          -0.4336,
+          0.9406,
+          -0.0445,
+          0.529
+        ],
+        "description": "low nitrogen, low phosphorus, humid, high rainfall",
+        "top_crops": [
+          "pomegranate",
+          "coconut",
+          "orange",
+          "papaya"
+        ]
+      },
+      {
+        "id": 4,
+        "size": 390,
+        "center": [
+          -0.6499,
+          0.1405,
+          -0.5364,
+          0.4798,
+          -0.1133,
+          0.8464,
+          -0.844
+        ],
+        "description": "low nitrogen, low potassium, alkaline soil, low rainfall",
+        "top_crops": [
+          "blackgram",
+          "mungbean",
+          "lentil",
+          "mothbeans"
+        ]
+      },
+      {
+        "id": 5,
+        "size": 200,
+        "center": [
+          1.3362,
+          -1.0917,
+          0.0395,
+          0.2985,
+          0.7759,
+          -0.0545,
+          -1.1962
+        ],
+        "description": "high nitrogen, low phosphorus, humid, low rainfall",
+        "top_crops": [
+          "watermelon",
+          "muskmelon"
+        ]
+      },
+      {
+        "id": 6,
+        "size": 141,
+        "center": [
+          -0.8158,
+          0.4406,
+          -0.5122,
+          -1.072,
+          -1.9282,
+          -0.9608,
+          0.2234
+        ],
+        "description": "low nitrogen, low potassium, cool, dry air, acidic soil",
+        "top_crops": [
+          "kidneybeans",
+          "pigeonpeas",
+          "chickpea",
+          "lentil"
+        ]
+      },
+      {
+        "id": 7,
+        "size": 291,
+        "center": [
+          0.8531,
+          -0.3096,
+          -0.2024,
+          -0.1724,
+          0.2149,
+          0.2296,
+          1.6905
+        ],
+        "description": "high nitrogen, high rainfall",
+        "top_crops": [
+          "rice",
+          "jute",
+          "coffee",
+          "papaya"
+        ]
+      },
+      {
+        "id": 8,
+        "size": 186,
+        "center": [
+          -0.8174,
+          -0.2958,
+          -0.4602,
+          0.9767,
+          -0.9816,
+          -1.2863,
+          -0.0737
+        ],
+        "description": "low nitrogen, hot, dry air, acidic soil",
+        "top_crops": [
+          "mango",
+          "pigeonpeas",
+          "mothbeans"
+        ]
+      },
+      {
+        "id": 9,
+        "size": 95,
+        "center": [
+          -0.2748,
+          0.4435,
+          0.6257,
+          -1.3301,
+          -2.4518,
+          1.2072,
+          -0.4287
+        ],
+        "description": "high potassium, cool, dry air, alkaline soil",
+        "top_crops": [
+          "chickpea"
+        ]
+      }
+    ]
+  },
+  "yield": {
+    "linear": {
+      "MAE": 32040,
+      "RMSE": 51004,
+      "R2": 0.6376
+    },
+    "ridge": {
+      "MAE": 32037,
+      "RMSE": 51004,
+      "R2": 0.6376
+    },
+    "random_forest_reference": {
+      "MAE": 8034,
+      "RMSE": 15349,
+      "R2": 0.9672
+    }
+  },
+  "label_poisoning_tree_accuracy": {
+    "0": 0.9773,
+    "0.05": 0.9545,
+    "0.1": 0.925,
+    "0.2": 0.8114,
+    "0.3": 0.825
+  },
+  "suitability": {
+    "MAE": 0.0506,
+    "R2": 0.9438,
+    "rows": 2200,
+    "tier_accuracy": 0.9091,
+    "unsuitable_predicted_under_30pct": 0.8581,
+    "argmax_matches_real_label": 0.975
+  },
+  "web_model_kb": 194.5
+}

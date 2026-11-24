@@ -1,0 +1,36 @@
+{
+  "_note": "Facts Low<F>/High<F> mean the reading is below the 10th / above the 90th percentile of the recommended crop's training rows (data-derived, not invented). F: N P K Temperature Humidity Ph Rainfall.",
+  "rules": [
+    {"id": "R1", "if": ["LowRainfall", "LowHumidity"], "then": "DrySpell"},
+    {"id": "R2", "if": ["DrySpell"], "then": "Irrigate"},
+    {"id": "R3", "if": ["LowRainfall", "HighTemperature"], "then": "Irrigate"},
+    {"id": "R4", "if": ["LowN"], "then": "AddNitrogen"},
+    {"id": "R5", "if": ["LowP"], "then": "AddPhosphorus"},
+    {"id": "R6", "if": ["LowK"], "then": "AddPotassium"},
+    {"id": "R7", "if": ["HighN"], "then": "ReduceNitrogen"},
+    {"id": "R8", "if": ["HighP"], "then": "ReducePhosphorus"},
+    {"id": "R9", "if": ["HighK"], "then": "ReducePotassium"},
+    {"id": "R10", "if": ["LowPh"], "then": "CorrectAcidity"},
+    {"id": "R11", "if": ["HighPh"], "then": "CorrectAlkalinity"},
+    {"id": "R12", "if": ["HighRainfall"], "then": "CheckDrainage"},
+    {"id": "R13", "if": ["HighRainfall", "HighHumidity"], "then": "FungalRisk"},
+    {"id": "R14", "if": ["FungalRisk"], "then": "ScoutForDisease"},
+    {"id": "R15", "if": ["HighTemperature"], "then": "HeatStress"},
+    {"id": "R16", "if": ["LowTemperature"], "then": "ColdStress"}
+  ],
+  "advice": {
+    "Irrigate": "Irrigate: rainfall is low (and the air is dry or hot) compared with what this crop usually gets.",
+    "AddNitrogen": "Nitrogen is low: apply a nitrogen-rich fertilizer (e.g. urea or compost/manure).",
+    "AddPhosphorus": "Phosphorus is low: apply a phosphorus fertilizer (e.g. single super phosphate).",
+    "AddPotassium": "Potassium is low: apply a potash fertilizer (e.g. muriate of potash).",
+    "ReduceNitrogen": "Nitrogen is already high: skip nitrogen fertilizer this cycle to avoid waste and runoff.",
+    "ReducePhosphorus": "Phosphorus is already high: skip phosphorus fertilizer this cycle.",
+    "ReducePotassium": "Potassium is already high: skip potash this cycle.",
+    "CorrectAcidity": "Soil is more acidic than this crop prefers: consider liming after a local soil test.",
+    "CorrectAlkalinity": "Soil is more alkaline than this crop prefers: consider gypsum or sulfur after a local soil test.",
+    "CheckDrainage": "Rainfall is high for this crop: make sure fields drain well to avoid waterlogging.",
+    "ScoutForDisease": "Wet and humid conditions favour fungal disease: scout the crop regularly.",
+    "HeatStress": "Temperature is above this crop's usual range: consider mulching, shade or irrigating in the cooler hours.",
+    "ColdStress": "Temperature is below this crop's usual range: consider protecting young plants or delaying sowing."
+  }
+}

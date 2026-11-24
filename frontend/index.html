@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Crop Advisor</title>
+  <meta name="description" content="AI crop recommendation, yield estimate and explainable farm advice. Runs entirely in your browser.">
+  <meta name="theme-color" content="#060d08">
+  <link rel="preload" href="vendor/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="vendor/lenis.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+</head>
+<body>
+  <nav class="nav">
+    <span class="logo"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 22V9m0 0c0-4 3-6 7-6 0 4-3 6-7 6Zm0 4c0-3-2.5-5-6-5 0 3 2.5 5 6 5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smart Crop Advisor</span>
+    <a href="#advisor" class="nav-link">Try it</a>
+  </nav>
+
+  <section class="hero">
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-copy">
+      <p class="eyebrow">PAI101 · EXPLAINABLE FARM AI</p>
+      <h1 id="hero-title">Know what to grow.<br>Know why.</h1>
+      <p class="lede" id="hero-lede">Enter your soil and weather readings. The advisor recommends a crop, explains its reasoning and suggests fixes.
+        Everything runs in your browser — your data never leaves this device.</p>
+      <a href="#advisor" class="cta" id="hero-cta">Start advising <span aria-hidden="true">↓</span></a>
+    </div>
+    <dl class="stats" id="hero-stats">
+      <div><dt>Crops</dt><dd data-count="22">0</dd></div>
+      <div><dt>Test accuracy</dt><dd data-count="99.1" data-decimals="1" data-suffix="%">0</dd></div>
+      <div><dt>Training samples</dt><dd data-count="2200" data-sep="1">0</dd></div>
+      <div><dt>Model size</dt><dd data-count="110" data-suffix=" KB">0</dd></div>
+    </dl>
+  </section>
+
+  <main id="advisor">
+    <section class="card" id="inputs">
+      <p class="tag">01 · INPUT</p>
+      <h2>Farm conditions</h2>
+      <label class="preset">Start from a typical crop
+        <select id="preset"><option value="">— choose to prefill —</option></select>
+      </label>
+      <form id="form" novalidate></form>
+      <button id="go" type="button">Advise me</button>
+      <ul id="messages" class="messages" aria-live="polite"></ul>
+    </section>
+
+    <div id="results" hidden>
+      <section class="card" id="rec"></section>
+      <section class="card" id="why"></section>
+      <section class="card" id="advice"></section>
+      <section class="card" id="compare"></section>
+      <section class="card" id="yield"></section>
+    </div>
+  </main>
+
+  <section class="pipeline" aria-label="How it works">
+    <p class="tag" data-reveal>HOW IT WORKS</p>
+    <ol>
+      <li data-reveal><b>01</b><h3>Sense</h3><p>Seven readings: N, P, K, pH, temperature, humidity, rainfall. Impossible values are rejected.</p></li>
+      <li data-reveal><b>02</b><h3>Learn</h3><p>Decision tree, random forest and a neural network trained on 2,200 labelled farms, plus a suitability model trained on 2,200 generated weak-field rows.</p></li>
+      <li data-reveal><b>03</b><h3>Reason</h3><p>A rule-based expert system chains facts into practical advice: irrigate, fertilise, correct the soil.</p></li>
+      <li data-reveal><b>04</b><h3>Explain</h3><p>Every answer shows how much each reading costs the suitability score, and whether the classifiers agree.</p></li>
+    </ol>
+  </section>
+
+  <section class="pipeline" aria-label="Agent design">
+    <p class="tag" data-reveal>THE ADVISOR AS AN AGENT (PEAS)</p>
+    <ol>
+      <li data-reveal><b>PERFORMANCE</b><h3>Accuracy and usefulness</h3><p>Crop accuracy, yield error (R², RMSE) and whether the advice helps. Not just a high score.</p></li>
+      <li data-reveal><b>ENVIRONMENT</b><h3>A farm</h3><p>Soil, weather and season. Partially observable (7 readings), stochastic, dynamic, mostly episodic.</p></li>
+      <li data-reveal><b>ACTUATORS</b><h3>Advice on screen</h3><p>Crop, suitability, yield and fixes. On a real farm this could drive irrigation or fertiliser dosing.</p></li>
+      <li data-reveal><b>SENSORS</b><h3>Seven readings</h3><p>N, P, K, pH, temperature, humidity, rainfall.</p></li>
+    </ol>
+    <p class="muted" data-reveal style="margin-top:16px">Three agent views: the rule engine is a <em>simple reflex</em> agent (condition-action rules), the models make it a <em>learning</em> agent,
+      and picking the crop with the highest suitability makes it <em>utility-based</em>. Future work: learn an irrigation policy from rewards (reinforcement learning).</p>
+  </section>
+
+  <section class="pipeline responsible" aria-label="Responsible use">
+    <p class="tag" data-reveal>RESPONSIBLE USE</p>
+    <ol>
+      <li data-reveal><b>SECURITY</b><h3>Guard the inputs</h3><p>Out-of-range or spoofed sensor values are rejected before inference. Flipping 20% of training labels cut tree accuracy from 97.7% to 81.1%, so training data must come from trusted sources.</p></li>
+      <li data-reveal><b>ETHICS</b><h3>Human in the loop</h3><p>The suitability score is always shown and output is advice, not a command. The data may not represent your region, and wrong advice costs real income.</p></li>
+      <li data-reveal><b>SOCIAL GOOD</b><h3>Less waste, more access</h3><p>Better crop fit means less water and fertiliser wasted, and expert-style guidance for small farmers who cannot afford an agronomist.</p></li>
+      <li data-reveal><b>PRIVACY &amp; EDGE</b><h3>Your data stays yours</h3><p>The whole model is under 200 KB and runs in your browser, offline. Nothing you enter is sent to a server. Local-language support is future work.</p></li>
+    </ol>
+  </section>
+
+  <footer>
+    <p><strong>This is advice, not a command.</strong> The models learned from a public dataset of 2,200 samples and may not match
+       your region or soil. They do not see soil type, pests or market prices. Check with a local agronomist before acting.</p>
+    <p>Suitability scores come from a synthetic dataset the team generated (public data has no weak fields). Treat them as a guide, not measured field results.</p>
+    <p>PAI101 project · decision tree, random forest, neural network, K-means, rule-based expert system.</p>
+  </footer>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/SplitText.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
